@@ -1,5 +1,16 @@
 <template>
   <div id="app">
+    <img
+      v-show="
+        $route.path === '/auth/register' || $route.path === '/auth/login'
+          ? false
+          : true
+      "
+      src="../public/bg.png"
+      alt="bg"
+      class="bgImg"
+    />
+
     <b-navbar
       v-show="
         $route.path === '/auth/register' || $route.path === '/auth/login'
@@ -103,6 +114,11 @@ export default {
 };
 </script>
 <style lang="css">
+.bgImg {
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
 .bgblur {
   background-color: rgba(255, 255, 255, 0.541) !important;
   backdrop-filter: saturate(180%) blur(20px);
