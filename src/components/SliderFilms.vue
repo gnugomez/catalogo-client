@@ -2,20 +2,32 @@
   <div>
     <h5 class="text-primary font-weight-bold">Más populares</h5>
     <div class="scrollmenu">
+      <div
+        v-show="films == null"
+        v-for="index in 20"
+        :key="index"
+        class="p-3 item"
+      >
+        <b-card no-body img-top>
+          <b-skeleton-img card-img="top"></b-skeleton-img>
+        </b-card>
+      </div>
       <div v-for="film in films" class="p-3 item" :key="film.title">
         <b-card
           overlay
           class="shadow"
           :img-src="imagesurl + film.poster_path"
-          img-alt="Image"
           img-top
         >
-          <b-link to="/film" class="card-link stretched-link"></b-link>
+          <b-link
+            :to="'movie/' + film.id + '/info/'"
+            class="card-link stretched-link"
+          ></b-link>
         </b-card>
         <div
           v-if="film.title"
-          class="filmbg bgblur shadow"
-          v-b-tooltip.hover.bottom="film.title"
+          class="filmbg bgblur"
+          v-b-tooltip.hover="film.title"
         >
           <h6 class="film-title">{{ film.title }}</h6>
           <b-card-text v-if="film.release_date">
@@ -27,8 +39,8 @@
         </div>
         <div
           v-if="film.name"
-          class="filmbg bgblur shadow"
-          v-b-tooltip.hover.bottom="film.name"
+          class="filmbg bgblur"
+          v-b-tooltip.hover="film.name"
         >
           <h6 v-if="film.name" class="film-title">{{ film.name }}</h6>
           <b-card-text v-if="film.release_date">
@@ -50,7 +62,7 @@ export default {
   data() {
     return {
       imagesurl: "https://image.tmdb.org/t/p/w500/",
-      films: [],
+      films: null,
     };
   },
   methods: {
@@ -80,8 +92,8 @@ export default {
 }
 .filmbg {
   position: absolute;
-  width: 85%;
-  margin-bottom: 85px;
+  width: 95%;
+  margin-bottom: 5px;
   left: 0;
   right: 0;
   margin-left: auto;
@@ -89,10 +101,14 @@ export default {
   bottom: 0;
   padding: 1rem;
   height: 83px;
-  border-radius: 16.8px;
-  transform: scale(0.8);
+  border-radius: 18.8px;
+  transform: scale(0.7);
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
-
+.card-body {
+  padding: 0px;
+  overflow: hidden;
+}
 .film-title {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -105,7 +121,6 @@ export default {
 .item {
   display: inline-block;
   position: relative;
-  padding-bottom: 100px !important;
 }
 .card {
   width: 170px;
@@ -116,11 +131,10 @@ export default {
   transition: 0.5s;
 }
 .card:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 .card-img-overlay {
   overflow: hidden;
-  padding: 0 !important;
 }
 
 .card-img-top {

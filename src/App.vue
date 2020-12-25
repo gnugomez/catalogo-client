@@ -20,7 +20,7 @@
       fixed="top"
       toggleable="lg"
       type="light"
-      class="bgblur"
+      class="bgblur shadow"
     >
       <b-navbar-brand to="/"
         ><b-icon icon="star-fill"></b-icon> Mis Peliculas</b-navbar-brand
@@ -34,8 +34,16 @@
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
-
         <b-navbar-nav class="ml-auto">
+          <b-nav-form>
+            <b-form-input
+              variant="transparent"
+              class="mr-sm-2 bginput"
+              size="sm"
+              type="text"
+              placeholder="Buscar.."
+            ></b-form-input>
+          </b-nav-form>
           <div v-if="!user">
             <b-button class="mr-1 ml-1" to="/auth/login" variant="light"
               >Iniciar Sesión</b-button
@@ -44,23 +52,19 @@
               Registrarse
             </b-button>
           </div>
+          <b-nav-item-dropdown v-if="user" right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <em>{{ user.name }}</em>
+              <b-avatar
+                src="https://avatars2.githubusercontent.com/u/31970428?s=460&u=3624f8864f2bcaefe925e1b14ec530412706d857&v=4"
+                size="30px"
+                class="ml-2 mr-2"
+              ></b-avatar>
+            </template>
+            <b-dropdown-item @click="userLogout()">Salir</b-dropdown-item>
+          </b-nav-item-dropdown>
         </b-navbar-nav>
-        <div v-if="user">
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown right>
-              <!-- Using 'button-content' slot -->
-              <template #button-content>
-                <em>{{ user.name }}</em>
-                <b-avatar
-                  src="https://avatars2.githubusercontent.com/u/31970428?s=460&u=3624f8864f2bcaefe925e1b14ec530412706d857&v=4"
-                  size="30px"
-                  class="ml-2 mr-2"
-                ></b-avatar>
-              </template>
-              <b-dropdown-item @click="userLogout()">Salir</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </div>
       </b-collapse>
     </b-navbar>
 
@@ -114,6 +118,14 @@ export default {
 };
 </script>
 <style lang="css">
+.bginput {
+  padding: 19px !important;
+  border: none !important;
+  backdrop-filter: saturate(180%);
+  -webkit-backdrop-filter: saturate(180%);
+  border-radius: 10px !important;
+  background-color: rgba(236, 236, 236, 0.384) !important;
+}
 .bgImg {
   position: absolute;
   width: 100%;
@@ -121,8 +133,8 @@ export default {
 }
 .bgblur {
   background-color: rgba(255, 255, 255, 0.541) !important;
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(280%) blur(20px);
+  -webkit-backdrop-filter: saturate(280%) blur(20px);
 }
 .footer {
   background-color: rgba(255, 255, 255, 0.2);

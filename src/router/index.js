@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Film from "../views/Film.vue";
+import MovieInfo from "../views/MovieInfo.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import auth from "@/logic/auth";
@@ -33,9 +33,9 @@ const routes = [
     component: Home,
   },
   {
-    path: "/film",
-    name: "Film",
-    component: Film,
+    path: "/movie/:id/info",
+    name: "MovieInfo",
+    component: MovieInfo,
   },
 ];
 
