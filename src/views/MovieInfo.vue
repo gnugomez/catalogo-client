@@ -45,6 +45,12 @@
             </div>
             <div v-if="filmImg">
               <h2>Imagenes de la película</h2>
+              <vue-plyr>
+                <div
+                  data-plyr-provider="youtube"
+                  data-plyr-embed-id="uaPbtACMxdQ"
+                ></div>
+              </vue-plyr>
               <b-carousel
                 style="text-shadow: 0px 0px 2px #000"
                 controls

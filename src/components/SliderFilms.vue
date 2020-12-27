@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="text-primary font-weight-bold">Más populares</h5>
+    <h5 class="text-primary font-weight-bold">{{ title }}</h5>
     <div class="scrollmenu">
       <div
         v-show="films == null"
@@ -9,46 +9,47 @@
         class="p-3 item"
       >
         <b-card no-body img-top>
-          <b-skeleton-img card-img="top"></b-skeleton-img>
+          <b-skeleton-img animation card-img="top"></b-skeleton-img>
         </b-card>
       </div>
       <div v-for="film in films" class="p-3 item" :key="film.title">
-        <b-card
-          overlay
-          class="shadow"
-          :img-src="imagesurl + film.poster_path"
-          img-top
-        >
-          <b-link
-            :to="'movie/' + film.id + '/info/'"
-            class="card-link stretched-link"
-          ></b-link>
-        </b-card>
-        <div
-          v-if="film.title"
-          class="filmbg bgblur"
-          v-b-tooltip.hover="film.title"
-        >
-          <h6 class="film-title">{{ film.title }}</h6>
-          <b-card-text v-if="film.release_date">
-            {{ film.release_date | moment }}
-          </b-card-text>
-          <b-card-text v-if="film.first_air_date">
-            {{ film.first_air_date | moment }}
-          </b-card-text>
+        <div v-if="film.title">
+          <b-card
+            overlay
+            class="shadow"
+            :img-src="imagesurl + film.poster_path"
+            img-top
+          >
+            <b-link
+              :to="'movie/' + film.id + '/info/'"
+              class="card-link stretched-link"
+            ></b-link>
+          </b-card>
+          <div class="filmbg bgblur" v-b-tooltip.hover="film.title">
+            <h6 class="film-title">{{ film.title }}</h6>
+            <b-card-text>
+              {{ film.release_date | moment }}
+            </b-card-text>
+          </div>
         </div>
-        <div
-          v-if="film.name"
-          class="filmbg bgblur"
-          v-b-tooltip.hover="film.name"
-        >
-          <h6 v-if="film.name" class="film-title">{{ film.name }}</h6>
-          <b-card-text v-if="film.release_date">
-            {{ film.release_date | moment }}
-          </b-card-text>
-          <b-card-text v-if="film.first_air_date">
-            {{ film.first_air_date | moment }}
-          </b-card-text>
+        <div v-if="film.name">
+          <b-card
+            overlay
+            class="shadow"
+            :img-src="imagesurl + film.poster_path"
+            img-top
+          >
+            <b-link
+              :to="'tv/' + film.id + '/info/'"
+              class="card-link stretched-link"
+            ></b-link>
+          </b-card>
+          <div class="filmbg bgblur" v-b-tooltip.hover="film.name">
+            <h6 class="film-title">{{ film.name }}</h6>
+            <b-card-text>
+              {{ film.first_air_date | moment }}
+            </b-card-text>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +66,7 @@ export default {
       films: null,
     };
   },
+  props: { title: String, url: String },
   methods: {
     moment: function () {
       return moment();
@@ -79,7 +81,7 @@ export default {
   async mounted() {
     const urlParams = "?api_key=b5b7e89874ed859bc216d8a64d1341a8&language=es";
     await axios
-      .get(`https://api.themoviedb.org/3/trending/all/day${urlParams}`)
+      .get(this.url + urlParams)
       .then((res) => (this.films = res.data.results))
       .catch((err) => console.log(err));
   },

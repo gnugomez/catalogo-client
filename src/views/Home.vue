@@ -10,7 +10,18 @@
         <h2 class="mt-0 mb-1">Listado de peliculas</h2>
       </b-media>
       <div fluid class="mt-4">
-        <filmslider></filmslider>
+        <filmslider
+          title="Más popular hoy"
+          url="https://api.themoviedb.org/3/trending/all/day"
+        ></filmslider>
+        <filmslider
+          title="Series más populares hoy"
+          url="https://api.themoviedb.org/3/trending/tv/day"
+        ></filmslider>
+        <filmslider
+          title="Peliculas mejor valoradas"
+          url="https://api.themoviedb.org/3/movie/top_rated"
+        ></filmslider>
       </div>
     </b-container>
   </div>
