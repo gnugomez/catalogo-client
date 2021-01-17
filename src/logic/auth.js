@@ -28,7 +28,6 @@ export default {
   },
   isLoggedIn() {
     if (this.getUserLogged()) {
-      axios.defaults.headers.common["auth-token"] = this.getUserLogged();
       return true;
     } else {
       return false;
@@ -38,7 +37,7 @@ export default {
     const apiPath = "http://localhost:4000/api/user";
 
     try {
-      let user = await axios.get(`${apiPath}/me`);
+      let user = await axios.get(`${apiPath}/me`, { headers: { 'auth-token': `${this.getUserLogged()}` } });
       user = user.data.data;
       return user;
     } catch {

@@ -1,9 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
+// Views
+import Interface from "../views/Interface.vue";
 import Home from "../views/Home.vue";
-import Film from "../views/Film.vue";
+import MovieInfo from "../views/MovieInfo.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+
+//Componentes
+import Teaser from "@/components/Teaser";
+import FilmImages from "@/components/FilmImages";
+import FilmVideos from "@/components/FilmVideos";
+
+//Logic
 import auth from "@/logic/auth";
 
 Vue.use(VueRouter);
@@ -29,13 +39,30 @@ const routes = [
   },
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    component: Interface,
+    children: [{
+      path: "",
+      component: Home
+    }]
   },
   {
-    path: "/film",
-    name: "Film",
-    component: Film,
+    path: "/movie/:id/info",
+    component: Interface,
+    children: [{
+      path: "",
+      component: MovieInfo,
+      children: [
+        {
+          path: "", name: "teaser", component: Teaser
+        },
+        {
+          path: "", name: "images", component: FilmImages
+        },
+        {
+          path: "", name: "videos", component: FilmVideos
+        }
+      ]
+    }]
   },
 ];
 
