@@ -12,7 +12,7 @@
           <b-skeleton-img animation card-img="top"></b-skeleton-img>
         </b-card>
       </div>
-      <div v-for="film in films" class="p-3 item" :key="film.title">
+      <div v-for="film in films" class="p-3 item" id="film" :key="film.title">
         <div v-if="film.title">
           <b-card
             overlay
@@ -21,11 +21,11 @@
             img-top
           >
             <b-link
-              :to="'movie/' + film.id + '/info/'"
+              :to="'/movie/' + film.id + '/info/'"
               class="card-link stretched-link"
             ></b-link>
           </b-card>
-          <div class="filmbg bgblur" v-b-tooltip.hover="film.title">
+          <div class="filmbg" v-b-tooltip.hover="film.title">
             <h6 class="film-title">{{ film.title }}</h6>
             <b-card-text>
               {{ film.release_date | moment }}
@@ -40,11 +40,11 @@
             img-top
           >
             <b-link
-              :to="'tv/' + film.id + '/info/'"
+              :to="'/tv/' + film.id + '/info/'"
               class="card-link stretched-link"
             ></b-link>
           </b-card>
-          <div class="filmbg bgblur" v-b-tooltip.hover="film.name">
+          <div class="filmbg" v-b-tooltip.hover="film.name">
             <h6 class="film-title">{{ film.name }}</h6>
             <b-card-text>
               {{ film.first_air_date | moment }}
@@ -82,7 +82,9 @@ export default {
     const urlParams = "?api_key=b5b7e89874ed859bc216d8a64d1341a8&language=es";
     await axios
       .get(this.url + urlParams)
-      .then((res) => (this.films = res.data.results))
+      .then((res) => {
+        this.films = res.data.results;
+      })
       .catch((err) => console.log(err));
   },
 };
@@ -92,7 +94,15 @@ export default {
   overflow: auto;
   white-space: nowrap;
 }
+.scrollmenu::-webkit-scrollbar {
+  display: none;
+}
+.item {
+  display: inline-block;
+  position: relative;
+}
 .filmbg {
+  background-color: white;
   position: absolute;
   width: 95%;
   margin-bottom: 5px;
@@ -120,10 +130,6 @@ export default {
   line-height: 20px;
   max-height: 20px;
 }
-.item {
-  display: inline-block;
-  position: relative;
-}
 .card {
   width: 170px;
   position: relative;
@@ -131,12 +137,6 @@ export default {
   margin-bottom: 30px !important;
   overflow: hidden;
   transition: 0.5s;
-}
-.card:hover {
-  transform: scale(1.05);
-}
-.card-img-overlay {
-  overflow: hidden;
 }
 
 .card-img-top {

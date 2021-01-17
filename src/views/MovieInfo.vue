@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="film != null">
     <div
       class="header"
       v-bind:style="{
@@ -14,15 +14,18 @@
         img-top
       >
       </b-card>
-      <div class="sub-card bgblur">
+      <div class="sub-card">
         <b-row>
-          <div class="col-md-8">
+          <div class="col-md-10">
             <h2 class="film-title">
               <b>{{ film.title }}</b> ({{ film.release_date | year }})
             </h2>
           </div>
-          <div class="headButtons col-md-4">
-            <b-button size="sm" variant="light" v-b-tooltip.hover="'Me gusta'"
+          <div class="headButtons col-md-2">
+            <b-button
+              size="sm"
+              variant="light"
+              v-b-tooltip.hover="'Añadir a favoritos'"
               ><b-icon icon="heart"></b-icon
             ></b-button>
             <b-button
@@ -35,39 +38,35 @@
         </b-row>
       </div>
     </div>
-    <b-container fluid="sm">
+    <b-container fluid="md">
       <b-media>
         <b-row>
-          <div class="col-md-8 mb-4">
+          <div class="col-md-8 mb-4" style="position: relative">
             <div v-if="film.overview">
               <h2>Argumento</h2>
               <p>{{ film.overview }}</p>
             </div>
-            <div v-if="filmImg">
-              <h2>Imagenes de la película</h2>
-              <vue-plyr>
-                <div
-                  data-plyr-provider="youtube"
-                  data-plyr-embed-id="uaPbtACMxdQ"
-                ></div>
-              </vue-plyr>
-              <b-carousel
-                style="text-shadow: 0px 0px 2px #000"
-                controls
-                indicators
-                img-width="1024"
-                img-height="480"
+            <b-nav pills class="mb-2">
+              <h2 class="mr-4">Media</h2>
+              <b-nav-item :to="{ name: 'teaser' }">Teaser</b-nav-item>
+              <b-nav-item :to="{ name: 'videos' }">Videos</b-nav-item>
+              <b-nav-item-dropdown
+                id="my-nav-dropdown"
+                text="Más"
+                toggle-class="nav-link-custom"
+                right
               >
-                <b-carousel-slide
-                  v-for="backdrop in filmImg.backdrops"
-                  :key="backdrop.id"
-                  :img-src="imagesurl + backdrop.file_path"
-                ></b-carousel-slide>
-              </b-carousel>
-            </div>
+                <b-dropdown-item :to="{ name: 'images' }"
+                  >Imágenes</b-dropdown-item
+                >
+                <b-dropdown-item to="posters">Pósters</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-nav>
+            <router-view></router-view>
           </div>
-          <div class="col-md-4">
-            <b-card title="Más Información" class="mb-2">
+          <div class="col-sm-4">
+            <b-card class="mb-2">
+              <b>Estado: </b> {{ film.status }}
               <center>
                 <b-avatar
                   src="https://placekitten.com/300/300"
@@ -85,6 +84,12 @@
         </b-row>
         <!-- b-[Optional: add media children here for nesting] -->
       </b-media>
+      <filmslider
+        title="Recomendado"
+        :url="
+          'https://api.themoviedb.org/3/movie/' + film.id + '/recommendations'
+        "
+      ></filmslider>
     </b-container>
   </div>
 </template>
@@ -92,12 +97,15 @@
 import axios from "axios";
 import moment from "moment";
 
+import filmslider from "@/components/SliderFilms";
+
 export default {
   data() {
     return {
       imagesurl: "https://image.tmdb.org/t/p/original/",
       film: null,
       filmImg: null,
+      filmVid: null,
     };
   },
   methods: {
@@ -135,9 +143,20 @@ export default {
       )
       .then((res) => {
         this.filmImg = res.data;
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
+
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${this.$route.params.id}/videos${apiKey}`
+      )
+      .then((res) => {
+        this.filmVid = res.data.results;
+      })
+      .catch((err) => console.log(err));
+  },
+  components: {
+    filmslider,
   },
 };
 </script>
@@ -178,9 +197,7 @@ export default {
   font-size: 30px;
 }
 .sub-card {
-  -webkit-mask: linear-gradient(to bottom, transparent 50%, black 90%);
-  mask: linear-gradient(to bottom, transparent 50%, black 90%);
-  background-color: rgba(255, 255, 255, 0.24);
+  background-image: linear-gradient(to bottom, transparent, white);
   padding: 50px;
   padding-top: 100%;
   padding-bottom: 40px;
@@ -216,10 +233,7 @@ export default {
   }
   .sub-card {
     padding: 30px;
-    padding-top: 360px;
-    -webkit-mask: linear-gradient(to bottom, black 100%, black 100%);
-    mask: linear-gradient(to bottom, black 100%, black 100%);
-    height: 438px;
+    padding-top: 140%;
   }
   .sub-card h2 {
     font-size: 25px;
@@ -241,8 +255,10 @@ export default {
     text-align: center;
   }
   .sub-card {
+    backdrop-filter: blur(20px);
     padding: 10px;
-    padding-top: 330px;
+    padding-bottom: 40px;
+    padding-top: 140%;
   }
 }
 </style>
